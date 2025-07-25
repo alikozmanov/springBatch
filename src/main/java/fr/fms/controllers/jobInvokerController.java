@@ -28,16 +28,21 @@ public class jobInvokerController {
     Job importUsersJob;
 
     @RequestMapping("/run-batch-job")
-    public String handle() throws Exception {
+    public String handle(String fileName) throws Exception {
+        if (fileName == null || fileName.isEmpty()) {
+            return "Erreur : le paramètre 'fileName' est obligatoire";
+        }
+
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("source", "Spring Boot")
-                .addLong("runAt", System.currentTimeMillis())  //  jajoute un paramètre unique
+                .addString("fileName", fileName)
+                .addLong("runAt", System.currentTimeMillis())
                 .toJobParameters();
 
         jobLauncher.run(censoringJob, jobParameters);
 
-        return "Censoring job has been invoked";
+        return "Censoring job lancé avec fichier : " + fileName;
     }
+
 
 
     @GetMapping("/run-users-import-job")

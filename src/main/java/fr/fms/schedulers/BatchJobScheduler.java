@@ -25,11 +25,16 @@ public class BatchJobScheduler {
     // Exécution automatique chaque minute
     @Scheduled(cron = "0 */1 * * * *")
     public void runImportJob() throws Exception {
+        String dynamicFileName = "users_" + System.currentTimeMillis() + ".csv";
+
         JobParameters jobParameters = new JobParametersBuilder()
                 .addDate("timestamp", new Date())
+                .addString("fileName", dynamicFileName)
                 .toJobParameters();
 
         JobExecution jobExecution = jobLauncher.run(importUsersJob, jobParameters);
-        System.out.println("Job importUsers lancé automatiquement avec status : " + jobExecution.getStatus());
+        System.out.println("Job importUsers lancé automatiquement avec fichier : "
+                + dynamicFileName + " et status : " + jobExecution.getStatus());
     }
+
 }
